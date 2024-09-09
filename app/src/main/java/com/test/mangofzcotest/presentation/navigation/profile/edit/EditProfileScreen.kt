@@ -1,4 +1,4 @@
-package com.test.mangofzcotest.presentation.profile.edit
+package com.test.mangofzcotest.presentation.navigation.profile.edit
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -29,10 +29,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.test.mangofzcotest.presentation.profile.ProfileViewModel
+import com.test.mangofzcotest.presentation.navigation.profile.ProfileViewModel
+import com.text.mangofzcotest.core.utils.dep
 import java.io.ByteArrayOutputStream
 
 @Composable
@@ -41,20 +41,20 @@ fun EditProfileScreen(
     onProfileUpdated: () -> Unit // A callback for when profile is successfully updated
 ) {
     val profileState by viewModel.profileState.collectAsState()
-    var name by remember { mutableStateOf(profileState?.name ?: "") }
-    var birthday by remember { mutableStateOf(profileState?.birthday ?: "") }
-    var city by remember { mutableStateOf(profileState?.city ?: "") }
-    var vk by remember { mutableStateOf(profileState?.vk ?: "") }
-    var instagram by remember { mutableStateOf(profileState?.instagram ?: "") }
-    var status by remember { mutableStateOf(profileState?.status ?: "") }
+    var name by remember { mutableStateOf(profileState?.name.orEmpty()) }
+    var birthday by remember { mutableStateOf(profileState?.birthday.orEmpty()) }
+    var city by remember { mutableStateOf(profileState?.city.orEmpty()) }
+    var vk by remember { mutableStateOf(profileState?.vk.orEmpty()) }
+    var instagram by remember { mutableStateOf(profileState?.instagram.orEmpty()) }
+    var status by remember { mutableStateOf(profileState?.status.orEmpty()) }
     var avatarBase64 by remember { mutableStateOf("") }
     var avatarFileName by remember { mutableStateOf("avatar.png") } // default file name
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .padding(16.dep),
+        verticalArrangement = Arrangement.spacedBy(16.dep)
     ) {
         // Avatar upload section
         AvatarUpload(avatarBase64, onAvatarSelected = { base64, fileName ->
@@ -106,7 +106,7 @@ fun EditProfileScreen(
                 avatarFileName = avatarFileName,
                 avatarBase64 = avatarBase64,
                 onProfileUpdated = onProfileUpdated,
-                username = profileState?.username ?: ""
+                username = profileState?.username.orEmpty()
             )
         }) {
             Text("Save Changes")
@@ -139,9 +139,9 @@ fun AvatarUpload(
                 model = decodeBase64ToBitmap(avatarBase64),
                 contentDescription = "Uploaded Avatar",
                 modifier = Modifier
-                    .size(120.dp)
+                    .size(120.dep)
                     .clip(CircleShape)
-                    .border(2.dp, Color.Gray, CircleShape)
+                    .border(2.dep, Color.Gray, CircleShape)
             )
         } else {
             Text("No Avatar Selected")

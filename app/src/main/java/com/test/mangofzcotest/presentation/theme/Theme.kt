@@ -1,57 +1,80 @@
 package com.test.mangofzcotest.presentation.theme
 
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import com.google.accompanist.systemuicontroller.SystemUiController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import ru.rassvet.ui.theme.ScreenSize
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
-)
+object Theme {
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    val screenSize: ScreenSize
+        @Composable
+        get() = LocalScreenSize.current
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
-)
+    val colors: AppPalette
+        @Composable
+        get() = LocalAppPalette.current
+
+    val buttonColors: AppButtonColors
+        @Composable
+        get() = LocalAppButtonColors.current
+
+    val typography: AppTypography
+        @Composable
+        get() = LocalAppTypography.current
+}
 
 @Composable
-fun MangoFzcoTestTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
-    content: @Composable () -> Unit
+fun AppTheme(
+    systemUiController: SystemUiController = rememberSystemUiController(),
+    widthDp: Int = LocalConfiguration.current.screenWidthDp,
+    content: @Composable () -> Unit,
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+    val screenSize = when {
+        widthDp <= 320 -> ScreenSize.SMALL
+        widthDp <= 620 -> ScreenSize.MEDIUM
+        else -> ScreenSize.EXPAND
     }
-
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
+    val appTypography = AppThemeImpl.getTypography(screenSize)
+    SideEffect {
+        systemUiController.apply {
+            setNavigationBarColor(
+                color = Color.Transparent,
+                darkIcons = true,
+                navigationBarContrastEnforced = false
+            )
+            setStatusBarColor(
+                color = Color.Transparent,
+                darkIcons = true
+            )
+        }
+    }
+    CompositionLocalProvider(
+        LocalAppPalette provides AppThemeImpl.appPalette,
+        LocalAppButtonColors provides AppThemeImpl.appButtonColors,
+        LocalAppTypography provides appTypography,
+        LocalScreenSize provides screenSize,
         content = content
     )
+}
+
+private val LocalAppPalette = staticCompositionLocalOf<AppPalette> {
+    error("No AppPalette provided")
+}
+
+private val LocalAppButtonColors = staticCompositionLocalOf<AppButtonColors> {
+    error("No AppPalette provided")
+}
+
+private val LocalAppTypography = staticCompositionLocalOf<AppTypography> {
+    error("No AppTypography provided")
+}
+
+private val LocalScreenSize = staticCompositionLocalOf<ScreenSize> {
+    error("No ScreenSize provided")
 }

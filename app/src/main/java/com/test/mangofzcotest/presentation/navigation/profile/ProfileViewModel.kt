@@ -1,4 +1,4 @@
-package com.test.mangofzcotest.presentation.profile
+package com.test.mangofzcotest.presentation.navigation.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

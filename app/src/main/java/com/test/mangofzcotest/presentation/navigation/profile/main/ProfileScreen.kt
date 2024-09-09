@@ -1,4 +1,4 @@
-package com.test.mangofzcotest.presentation.profile.main
+package com.test.mangofzcotest.presentation.navigation.profile.main
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -16,11 +16,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.test.mangofzcotest.domain.entities.UserProfileData
-import com.test.mangofzcotest.presentation.profile.ProfileViewModel
+import com.test.mangofzcotest.presentation.navigation.profile.ProfileViewModel
+import com.text.mangofzcotest.core.utils.dep
 
 @Composable
 fun ProfileScreen(
@@ -45,8 +45,8 @@ fun ProfileContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .padding(16.dep),
+        verticalArrangement = Arrangement.spacedBy(16.dep)
     ) {
         // User Avatar
         userProfileData.miniAvatar?.let { avatarUrl ->
@@ -54,9 +54,9 @@ fun ProfileContent(
                 model = avatarUrl,
                 contentDescription = "User Avatar",
                 modifier = Modifier
-                    .size(120.dp)
+                    .size(120.dep)
                     .clip(CircleShape)
-                    .border(2.dp, Color.Gray, CircleShape)
+                    .border(2.dep, Color.Gray, CircleShape)
             )
         }
 

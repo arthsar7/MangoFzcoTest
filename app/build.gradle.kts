@@ -84,6 +84,10 @@ dependencies {
     //coil
     implementation(libs.coil.compose)
 
+    //system ui controller
+    implementation(libs.accompanist.systemuicontroller)
+
+    //modules
     implementation(project(":domain"))
     implementation(project(":data"))
     implementation(project(":core"))

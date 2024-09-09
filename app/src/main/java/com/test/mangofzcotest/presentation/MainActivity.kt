@@ -3,14 +3,8 @@ package com.test.mangofzcotest.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.test.mangofzcotest.presentation.auth.AuthScreen
-import com.test.mangofzcotest.presentation.profile.edit.EditProfileScreen
-import com.test.mangofzcotest.presentation.profile.main.ProfileScreen
-import com.test.mangofzcotest.presentation.screen.Screen
-import com.text.mangofzcotest.core.utils.navigatePopUpSelf
+import com.test.mangofzcotest.presentation.navigation.host.MainNavHost
+import com.test.mangofzcotest.presentation.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,24 +12,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val navController = rememberNavController()
-            NavHost(navController = navController, startDestination = Screen.Auth.route) {
-                composable(Screen.Auth.route) {
-                    AuthScreen {
-                        navController.navigatePopUpSelf(Screen.Profile.route)
-                    }
-                }
-                composable(Screen.Chats.route) {
-//                    ChatListScreen(navController)
-                }
-                composable(Screen.Profile.route) {
-                    ProfileScreen {
-                        navController.navigate(Screen.EditProfile.route)
-                    }
-                }
-                composable(Screen.EditProfile.route) {
-                    EditProfileScreen(onProfileUpdated = navController::popBackStack)
-                }
+            AppTheme {
+                MainNavHost()
             }
         }
     }
