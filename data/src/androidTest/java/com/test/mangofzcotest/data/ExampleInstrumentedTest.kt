@@ -1,4 +1,4 @@
-package com.test.mangofzcotest
+package com.test.mangofzcotest.data
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -17,6 +17,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.test.mangofzcotest", appContext.packageName)
+        assertEquals("com.test.mangofzcotest.data.test", appContext.packageName)
     }
 }

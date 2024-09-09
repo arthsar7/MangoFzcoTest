@@ -21,4 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "MangoFzcoTest"
 include(":app")
- 
+include(":data")
+include(":domain")
+include(":core")

@@ -6,7 +6,11 @@ import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.test.mangofzcotest.utils.navigatePopUpSelf
+import com.test.mangofzcotest.presentation.auth.AuthScreen
+import com.test.mangofzcotest.presentation.profile.edit.EditProfileScreen
+import com.test.mangofzcotest.presentation.profile.main.ProfileScreen
+import com.test.mangofzcotest.presentation.screen.Screen
+import com.text.mangofzcotest.core.utils.navigatePopUpSelf
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

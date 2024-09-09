@@ -1,4 +1,4 @@
-package com.test.mangofzcotest
+package com.test.mangofzcotest.data
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

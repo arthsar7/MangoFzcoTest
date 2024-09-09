@@ -1,6 +1,9 @@
 package com.test.mangofzcotest.di
 
+import android.content.Context
 import com.google.gson.Gson
+import com.test.mangofzcotest.data.database.dao.UserDao
+import com.test.mangofzcotest.data.database.root.AppDatabase
 import com.test.mangofzcotest.data.network.apiservice.ApiService
 import com.test.mangofzcotest.data.network.apiservice.RefreshTokenApiService
 import com.test.mangofzcotest.data.network.authenticator.TokenAuthenticator
@@ -16,11 +19,12 @@ import com.test.mangofzcotest.domain.repository.TokenRepository
 import com.test.mangofzcotest.domain.repository.UserRepository
 import com.test.mangofzcotest.domain.storage.PreferencesManager
 import com.test.mangofzcotest.domain.usecases.auth.RefreshAccessTokenUseCase
-import com.test.mangofzcotest.utils.isReleaseVersion
+import com.text.mangofzcotest.core.utils.isReleaseVersion
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Authenticator
 import okhttp3.ConnectionPool
@@ -159,6 +163,19 @@ class DataModule {
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
+        return AppDatabase.getInstance(context)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideUserDao(appDatabase: AppDatabase): UserDao {
+        return appDatabase.userDao()
     }
 
     @Module
