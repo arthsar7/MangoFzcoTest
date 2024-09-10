@@ -1,15 +1,14 @@
 package com.test.mangofzcotest.presentation.navigation.profile
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.test.mangofzcotest.domain.entities.UserProfileData
 import com.test.mangofzcotest.domain.entities.UserUpdateData
 import com.test.mangofzcotest.domain.usecases.user.GetUserProfileDataUseCase
 import com.test.mangofzcotest.domain.usecases.user.UpdateUserProfileUseCase
+import com.test.mangofzcotest.presentation.BaseViewModel
+import com.test.mangofzcotest.presentation.navigation.screen.ScreenState
 import com.text.mangofzcotest.core.utils.log
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,10 +16,7 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val getUserProfileDataUseCase: GetUserProfileDataUseCase,
     private val updateUserProfileUseCase: UpdateUserProfileUseCase
-) : ViewModel() {
-
-    private val _profileState = MutableStateFlow<UserProfileData?>(null)
-    val profileState = _profileState.asStateFlow()
+) : BaseViewModel<UserProfileData>() {
 
     init {
         loadUserProfile()
@@ -28,12 +24,10 @@ class ProfileViewModel @Inject constructor(
 
     private fun loadUserProfile() {
         viewModelScope.launch {
+            _screenState.value = ScreenState.Loading()
             getUserProfileDataUseCase().onSuccess { profileData ->
-                _profileState.value = profileData
-                log("Profile: $profileData")
-            }.onFailure { error ->
-                log("Error: $error")
-            }
+               _screenState.value = ScreenState.Success(profileData)
+            }.handleFailure()
         }
     }
 
@@ -50,6 +44,7 @@ class ProfileViewModel @Inject constructor(
         onProfileUpdated: () -> Unit
     ) {
         viewModelScope.launch {
+            _screenState.value = ScreenState.Loading()
             val updatedProfile = UserUpdateData(
                 name = name,
                 username = username,
@@ -62,13 +57,13 @@ class ProfileViewModel @Inject constructor(
                 avatarFileName = avatarFileName
             )
 
-            // Make PUT request to update the profile
             val result = updateUserProfileUseCase(updatedProfile)
 
-            result.onSuccess {
-                // Profile successfully updated
+            result.onSuccess { userProfileData ->
+                log(userProfileData.toString())
                 onProfileUpdated()
-            }
+                _screenState.value = ScreenState.Success(userProfileData)
+            }.handleFailure()
         }
     }
 

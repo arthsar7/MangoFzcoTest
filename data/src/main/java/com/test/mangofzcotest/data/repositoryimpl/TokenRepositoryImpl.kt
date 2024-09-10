@@ -17,6 +17,9 @@ class TokenRepositoryImpl @Inject constructor(
 ): TokenRepository {
     override suspend fun refreshAccessToken(): Result<TokenData> = safeApiCall {
         apiService.refreshToken(RefreshTokenRequest(prefs.refreshToken.first()))
-    }.onSuccess { prefs.saveTokens(it.accessToken.orEmpty(), it.refreshToken.orEmpty())}
+    }.onSuccess {
+        prefs.saveTokens(it.accessToken.orEmpty(), it.refreshToken.orEmpty())
+        prefs.saveUserId(it.userId)
+    }
         .map(TokenResponse::toDomain)
 }

@@ -1,4 +1,4 @@
-package com.test.mangofzcotest.presentation.navigation.auth
+package com.test.mangofzcotest.presentation.navigation.auth.register
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,57 +21,55 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.test.mangofzcotest.R
+import com.test.mangofzcotest.presentation.StateHandler
 import com.test.mangofzcotest.presentation.ToastMessage
-import com.text.mangofzcotest.core.utils.dep
+import com.test.mangofzcotest.presentation.theme.Theme
+import com.test.mangofzcotest.presentation.theme.dep
 
 @Composable
 fun AuthRegisterScreen(
-    phone: String,
     viewModel: AuthRegisterViewModel = hiltViewModel(),
-    onSuccess: () -> Unit
+    onSuccess: (phone: String) -> Unit
 ) {
-    var name by remember { mutableStateOf("") }
-    var username by remember { mutableStateOf("") }
-    val currentState by viewModel.currentScreenState.collectAsState()
+    val currentState by viewModel.screenState.collectAsState()
     Column {
         RegisterScreen(
-            phone = phone,
-            name = name,
-            username = username,
-            onChangeName = { name = it },
-            onChangeUsername = { username = it },
+            phone = viewModel.phone,
             onRegister = viewModel::register
         )
-        when (val state = currentState) {
-            is ScreenState.Error -> {
-                ToastMessage(state.errorMessage)
-            }
-            ScreenState.Idle -> {
-                /* nothing */
-            }
-            ScreenState.Loading -> {
+        StateHandler(
+            state = currentState,
+            loadingContent = {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
+            },
+            errorContent = {
+                ToastMessage(it.errorMessage)
+            },
+            content = {
+                val data = it.data
+                LaunchedEffect(data) {
+                    if (data != null) {
+                        onSuccess(data)
+                    }
+                }
             }
-            ScreenState.Success -> {
-                onSuccess()
-            }
-        }
+        )
     }
 }
 
 @Composable
 fun RegisterScreen(
     phone: String,
-    name: String,
-    username: String,
-    onChangeName: (String) -> Unit,
-    onChangeUsername: (String) -> Unit,
     onRegister: (phone: String, name: String, username: String) -> Unit,
 ) {
+    var name by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
     val usernameRegex = "^[a-zA-Z0-9_-]*$".toRegex()
     Column(
         modifier = Modifier
@@ -80,17 +78,19 @@ fun RegisterScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Регистрация", style = MaterialTheme.typography.headlineMedium)
+        Text(text = stringResource(R.string.register), style = Theme.typography.titleAuthScreen)
 
         // Номер телефона без возможности редактирования
-        Text(text = phone, style = MaterialTheme.typography.bodyLarge)
+        Text(text = phone, style = Theme.typography.regularAuthScreen)
 
         Spacer(modifier = Modifier.height(16.dep))
 
         TextField(
             value = name,
-            onValueChange =  onChangeName,
-            placeholder = { Text("Введите имя") },
+            onValueChange =  {
+                name = it
+            },
+            placeholder = { Text(stringResource(R.string.name)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -103,8 +103,10 @@ fun RegisterScreen(
 
         TextField(
             value = username,
-            onValueChange = onChangeUsername,
-            placeholder = { Text("Введите username") },
+            onValueChange = {
+                username = it
+            },
+            placeholder = { Text(stringResource(R.string.username)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -124,7 +126,7 @@ fun RegisterScreen(
             enabled = name.isNotEmpty() && username.isNotEmpty(),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Зарегистрироваться")
+            Text(stringResource(R.string.register))
         }
     }
 }

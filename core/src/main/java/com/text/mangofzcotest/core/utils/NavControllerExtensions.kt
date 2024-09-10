@@ -10,9 +10,15 @@ fun NavHostController.navigateSingleTop(route: String, builder: NavOptionsBuilde
     }
 }
 
+fun NavHostController.navigatePopUpGraph(route: String) {
+    navigateSingleTop(route) {
+        popUpTo(0) { inclusive = true }
+    }
+}
+
 fun NavHostController.navigatePopUpSelf(route: String) {
     val currentRoute = currentBackStackEntry?.destination?.route ?: return
-    navigateSingleTop(route) {
+    navigate(route) {
         popUpTo(currentRoute) { inclusive = true }
     }
 }

@@ -14,9 +14,11 @@
         android:theme="@style/Theme.MangoFzcoTest"
         tools:targetApi="31">
         <activity
+            android:screenOrientation="portrait"
             android:name=".presentation.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.MangoFzcoTest">
+            android:theme="@style/Theme.MangoFzcoTest"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

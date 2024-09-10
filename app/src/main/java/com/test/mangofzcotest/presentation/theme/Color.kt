@@ -1,4 +1,4 @@
-package ru.rassvet.ui.theme
+package com.test.mangofzcotest.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
@@ -14,9 +14,9 @@ val BlueAlpha = Color(0xFFF2F4F6)
 val Orange = Color(0xFFFF5100)
 val White = Color.White
 
-val ProstoAccentBlue = Color(0xFF4643D3)
-val ProstoAccentPeach = Color(0xFFFC805C)
-val ProstoRed = Color.Red
-val ProstoBgBlue = Color(0xFFE5F2F6)
+val AccentBlue = Color(0xFF4643D3)
+val AccentPeach = Color(0xFFFC805C)
+val Red = Color.Red
+val BgBlue = Color(0xFFE5F2F6)
 
-val ProstoGray = Color(0xFFA2A3A3)
+val Gray = Color(0xFFA2A3A3)

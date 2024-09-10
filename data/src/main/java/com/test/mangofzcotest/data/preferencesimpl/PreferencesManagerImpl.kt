@@ -25,8 +25,10 @@ class PreferencesManagerImpl @Inject constructor(
 
         private const val ACCESS_TOKEN_KEY_NAME = "access_token"
         private const val REFRESH_TOKEN_KEY_NAME = "refresh_token"
+        private const val USER_ID_KEY_NAME = "user_id"
         private val ACCESS_TOKEN_KEY = stringPreferencesKey(ACCESS_TOKEN_KEY_NAME)
         private val REFRESH_TOKEN_KEY = stringPreferencesKey(REFRESH_TOKEN_KEY_NAME)
+        private val USER_ID_KEY = intPreferencesKey("user_id")
     }
 
     // Получение токена доступа
@@ -39,6 +41,10 @@ class PreferencesManagerImpl @Inject constructor(
     override val refreshToken: Flow<String> = context.dataStore.data
         .map { preferences ->
             preferences[REFRESH_TOKEN_KEY].orEmpty()
+        }
+    override val userId: Flow<Int> = context.dataStore.data
+        .map { preferences ->
+            preferences[USER_ID_KEY] ?: 0
         }
 
     override suspend fun save(key: String, value: Any) {
@@ -57,6 +63,10 @@ class PreferencesManagerImpl @Inject constructor(
     override suspend fun saveTokens(accessToken: String, refreshToken: String) {
         save(ACCESS_TOKEN_KEY_NAME, accessToken)
         save(REFRESH_TOKEN_KEY_NAME, refreshToken)
+    }
+
+    override suspend fun saveUserId(userId: Int) {
+        save(USER_ID_KEY_NAME, userId)
     }
 
 }

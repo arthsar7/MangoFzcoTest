@@ -7,7 +7,11 @@ interface PreferencesManager {
 
     val refreshToken: Flow<String>
 
+    val userId: Flow<Int>
+
     suspend fun save(key: String, value: Any)
 
     suspend fun saveTokens(accessToken: String, refreshToken: String)
+
+    suspend fun saveUserId(userId: Int)
 }

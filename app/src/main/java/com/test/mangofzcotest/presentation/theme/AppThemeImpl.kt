@@ -9,23 +9,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.test.mangofzcotest.R
-import com.text.mangofzcotest.core.utils.lh
-import ru.rassvet.ui.theme.Blue
-import ru.rassvet.ui.theme.BlueAlpha
-import ru.rassvet.ui.theme.BlueAqua
-import ru.rassvet.ui.theme.BlueLight
-import ru.rassvet.ui.theme.LogoGradient1
-import ru.rassvet.ui.theme.LogoGradient2
-import ru.rassvet.ui.theme.LogoGradient3
-import ru.rassvet.ui.theme.LogoGradient4
-import ru.rassvet.ui.theme.Orange
-import ru.rassvet.ui.theme.ProstoAccentBlue
-import ru.rassvet.ui.theme.ProstoAccentPeach
-import ru.rassvet.ui.theme.ProstoBgBlue
-import ru.rassvet.ui.theme.ProstoGray
-import ru.rassvet.ui.theme.ProstoRed
 import ru.rassvet.ui.theme.ScreenSize
-import ru.rassvet.ui.theme.White
 
 object AppThemeImpl {
 
@@ -35,19 +19,19 @@ object AppThemeImpl {
         onBackgroundLight = BlueLight,
         onBackgroundAqua = BlueAqua,
         onPrimary = White,
-        primary = ProstoAccentPeach,
-        onPrimaryAlpha = ProstoAccentPeach.copy(alpha = 0.4f),
+        primary = AccentPeach,
+        onPrimaryAlpha = AccentPeach.copy(alpha = 0.4f),
         buttonGray = BlueAlpha,
         backgroundInfoBox = BlueAlpha,
-        secondary = ProstoAccentBlue,
-        secondaryLight = ProstoBgBlue,
-        secondaryAqua = ProstoAccentBlue.copy(alpha = 0.3f),
-        secondaryAlpha7per = ProstoAccentBlue.copy(alpha = 0.07f),
+        secondary = AccentBlue,
+        secondaryLight = BgBlue,
+        secondaryAqua = AccentBlue.copy(alpha = 0.3f),
+        secondaryAlpha7per = AccentBlue.copy(alpha = 0.07f),
         onSecondary = White,
         onSecondaryAlpha = White.copy(alpha = 0.4f),
         buttonOrangeNoActive = Orange.copy(alpha = 0.05f),
-        errorColor = ProstoRed,
-        disabledTextColor = ProstoGray,
+        errorColor = Red,
+        disabledTextColor = Gray,
         logoGradient = Brush.verticalGradient(
             listOf(
                 LogoGradient1,

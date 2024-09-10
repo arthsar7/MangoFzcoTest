@@ -1,4 +1,4 @@
-package com.text.mangofzcotest.core.utils
+package com.test.mangofzcotest.presentation.theme
 
 import android.content.res.Configuration
 import androidx.compose.runtime.Composable

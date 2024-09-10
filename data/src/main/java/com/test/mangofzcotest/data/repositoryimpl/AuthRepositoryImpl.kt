@@ -21,7 +21,12 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun checkAuthCode(phone: String, code: String) = safeApiCall {
         apiService.checkAuthCode(CodeRequest(phone = phone, code = code))
-    }.onSuccess { prefs.saveTokens(it.accessToken.orEmpty(), it.refreshToken.orEmpty()) }
+    }.onSuccess {
+        if (it.isUserExists) {
+            prefs.saveTokens(it.accessToken.orEmpty(), it.refreshToken.orEmpty())
+            prefs.saveUserId(it.userId)
+        }
+    }
         .map(LoginOutResponse::toDomain)
 
 
@@ -37,6 +42,9 @@ class AuthRepositoryImpl @Inject constructor(
                 username = username
             )
         )
-    }.onSuccess { prefs.saveTokens(it.accessToken.orEmpty(), it.refreshToken.orEmpty()) }
+    }.onSuccess {
+        prefs.saveTokens(it.accessToken.orEmpty(), it.refreshToken.orEmpty())
+        prefs.saveUserId(it.userId)
+    }
         .map(TokenResponse::toDomain)
 }

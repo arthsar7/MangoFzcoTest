@@ -7,6 +7,6 @@ interface UserRepository {
 
     suspend fun getUserProfile(): Result<UserProfileData>
 
-    suspend fun updateUserProfile(profileUpdate: UserUpdateData): Result<Unit>
+    suspend fun updateUserProfile(profileUpdate: UserUpdateData): Result<UserProfileData>
 
 }

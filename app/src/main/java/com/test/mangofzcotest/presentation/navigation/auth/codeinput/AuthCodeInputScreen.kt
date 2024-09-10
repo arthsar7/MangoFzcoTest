@@ -1,4 +1,4 @@
-package com.test.mangofzcotest.presentation.navigation.auth
+package com.test.mangofzcotest.presentation.navigation.auth.codeinput
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,54 +23,57 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.test.mangofzcotest.presentation.StateHandler
 import com.test.mangofzcotest.presentation.ToastMessage
-import com.text.mangofzcotest.core.utils.dep
+import com.test.mangofzcotest.presentation.navigation.screen.ScreenState
+import com.test.mangofzcotest.presentation.navigation.screen.isLoading
+import com.test.mangofzcotest.presentation.theme.Theme
+import com.test.mangofzcotest.presentation.theme.dep
 
 @Composable
 fun AuthCodeInputScreen(
     viewModel: AuthCodeInputViewModel = hiltViewModel(),
-    phone: String,
     onRegister: (phone: String) -> Unit,
     onSuccess: (phone: String) -> Unit
 ) {
-    val currentState by viewModel.currentScreenState.collectAsState()
-    var code by remember { mutableStateOf("") }
+    val currentState by viewModel.screenState.collectAsState()
     Column {
         SmsCodeInputScreen(
             currentState = currentState,
-            phone = phone,
-            code = code,
-            onCodeChange = { code = it },
-            onSendCode = { phone, code ->
-                viewModel.checkAuthCode(phone, code, onRegister, onSuccess)
-            },
+            phone = viewModel.phone,
+            onSendCode = viewModel::checkAuthCode,
         )
-        when (val state = currentState) {
-            is ScreenState.Error -> {
-                ToastMessage(state.errorMessage)
-            }
-            ScreenState.Idle -> {
-                /* nothing */
-            }
-            ScreenState.Loading -> {
+        StateHandler(
+            state = currentState,
+            loadingContent = {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
+            },
+            errorContent = {
+                ToastMessage(it.errorMessage)
+            },
+            content = { successState ->
+                val codeResult = successState.data
+                LaunchedEffect(codeResult) {
+                    when (codeResult) {
+                        is CodeResult.UserExists -> onSuccess(codeResult.phone)
+                        is CodeResult.UserNotExists -> onRegister(codeResult.phone)
+                        else -> {}
+                    }
+                }
             }
-            ScreenState.Success -> {
-                /* nothing */
-            }
-        }
+        )
     }
 }
+
 @Composable
 fun SmsCodeInputScreen(
-    currentState: ScreenState,
+    currentState: ScreenState<Any?>,
     phone: String,
-    code: String,
-    onCodeChange: (String) -> Unit,
     onSendCode: (phone: String, code: String) -> Unit,
 ) {
+    var code by remember { mutableStateOf("") }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -78,13 +81,13 @@ fun SmsCodeInputScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Введите код подтверждения", style = MaterialTheme.typography.headlineMedium)
+        Text(text = "Enter SMS code", style = Theme.typography.titleAuthScreen)
         TextField(
             value = code,
             onValueChange = {
-                onCodeChange(it.filter { char -> char.isDigit() }.take(6))
+                code = it.filter { char -> char.isDigit() }.take(6)
             },
-            placeholder = { Text("Введите код") },
+            placeholder = { Text("SMS code") },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
             ),
@@ -96,7 +99,7 @@ fun SmsCodeInputScreen(
             enabled = !currentState.isLoading && code.length == 6,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Подтвердить код")
+            Text("Send code")
         }
         if (currentState.isLoading) {
             CircularProgressIndicator()

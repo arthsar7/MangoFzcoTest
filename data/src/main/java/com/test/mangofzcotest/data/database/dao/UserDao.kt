@@ -11,12 +11,12 @@ import com.test.mangofzcotest.data.database.entities.UserProfileDbModel
 interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertUserProfile(userProfileDbModel: UserProfileDbModel)
+    suspend fun insertUserProfile(userProfileDbModel: UserProfileDbModel)
 
     @Update
-    fun updateUserProfile(userProfileDbModel: UserProfileDbModel)
+    suspend fun updateUserProfile(userProfileDbModel: UserProfileDbModel)
 
     @Query("SELECT * FROM user_profile_table WHERE id = :id")
-    fun getUserProfile(id: Int): UserProfileDbModel?
+    suspend fun getUserProfile(id: Int): UserProfileDbModel?
 
 }

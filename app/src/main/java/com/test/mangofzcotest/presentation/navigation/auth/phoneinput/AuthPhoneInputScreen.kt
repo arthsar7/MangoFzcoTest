@@ -1,4 +1,4 @@
-package com.test.mangofzcotest.presentation.navigation.auth
+package com.test.mangofzcotest.presentation.navigation.auth.phoneinput
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,7 +13,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -25,51 +24,48 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.test.mangofzcotest.R
+import com.test.mangofzcotest.presentation.StateHandler
 import com.test.mangofzcotest.presentation.ToastMessage
-import com.text.mangofzcotest.core.utils.dep
+import com.test.mangofzcotest.presentation.navigation.screen.ScreenState
+import com.test.mangofzcotest.presentation.navigation.screen.isLoading
+import com.test.mangofzcotest.presentation.theme.Theme
+import com.test.mangofzcotest.presentation.theme.dep
 
 
 @Composable
 fun AuthPhoneInputScreen(
-    viewModel: AuthViewModel = hiltViewModel(),
+    viewModel: AuthPhoneInputViewModel = hiltViewModel(),
     onNavigate: (phone: String) -> Unit
 ) {
-    val currentState: ScreenState by viewModel.currentScreenState.collectAsState()
-
-    var phone by remember { mutableStateOf("") }
-    var selectedCountry by remember { mutableStateOf(Country.RUSSIA) }
-
+    val currentState: ScreenState<String> by viewModel.screenState.collectAsState()
     Column {
         PhoneInputContent(
             currentState = currentState,
             onSendPhone = viewModel::sendAuthCode,
-            phone = phone,
-            onPhoneChange = {
-                phone = it
-            },
-            selectedCountry = selectedCountry,
-            onCountryChange = {
-                selectedCountry = it
-            }
         )
-        when (val state = currentState) {
-            is ScreenState.Error -> {
-                ToastMessage(message = state.errorMessage)
-            }
-            ScreenState.Idle -> {
-                /* nothing */
-            }
-            ScreenState.Loading -> {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-            }
-            ScreenState.Success -> {
+        StateHandler(
+            state = currentState,
+            loadingContent = {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            },
+            errorContent ={
+                ToastMessage(it.errorMessage)
+            },
+            content = {
+                val phone = it.data
                 LaunchedEffect(phone) {
-                    onNavigate(phone)
+                    if (phone != null) {
+                        onNavigate(phone)
+                    }
                 }
             }
-        }
+        )
     }
 
 }
@@ -120,13 +116,12 @@ fun applyPhoneMask(input: String, dialCode: String): String {
 
 @Composable
 fun PhoneInputContent(
-    currentState: ScreenState,
-    phone: String,
-    selectedCountry: Country,
+    currentState: ScreenState<Any?>,
     onSendPhone: (String) -> Unit,
-    onPhoneChange: (String) -> Unit,
-    onCountryChange: (Country) -> Unit
 ) {
+    var phone by remember { mutableStateOf("") }
+    var selectedCountry by remember { mutableStateOf(Country.RUSSIA) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -134,19 +129,21 @@ fun PhoneInputContent(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Введите номер телефона", style = MaterialTheme.typography.headlineMedium)
+        Text(text = stringResource(R.string.enter_your_phone_number), style = Theme.typography.titleAuthScreen)
         CountryPicker(
             selectedCountry = selectedCountry,
             countryList = Country.entries,
-            onCountryChange = onCountryChange
+            onCountryChange = {
+                selectedCountry = it
+            }
         )
 
         TextField(
             value = phone,
             onValueChange = {
-                onPhoneChange(applyPhoneMask(it, selectedCountry.dialCode))
+                phone = applyPhoneMask(it, selectedCountry.dialCode)
             },
-            placeholder = { Text("Введите телефон") },
+            placeholder = { Text(stringResource(R.string.phone_number)) },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Phone),
             modifier = Modifier.fillMaxWidth()
         )
@@ -156,7 +153,7 @@ fun PhoneInputContent(
             enabled = !currentState.isLoading && phone.isNotEmpty(),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Отправить код")
+            Text(stringResource(R.string.send_code))
         }
     }
 }

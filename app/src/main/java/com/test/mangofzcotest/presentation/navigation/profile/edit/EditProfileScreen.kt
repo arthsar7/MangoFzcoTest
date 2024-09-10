@@ -28,27 +28,57 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.test.mangofzcotest.R
+import com.test.mangofzcotest.domain.entities.UserProfileData
+import com.test.mangofzcotest.presentation.LoadingScreen
+import com.test.mangofzcotest.presentation.StateHandler
+import com.test.mangofzcotest.presentation.ToastMessage
 import com.test.mangofzcotest.presentation.navigation.profile.ProfileViewModel
-import com.text.mangofzcotest.core.utils.dep
+import com.test.mangofzcotest.presentation.theme.dep
 import java.io.ByteArrayOutputStream
 
 @Composable
 fun EditProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel(),
-    onProfileUpdated: () -> Unit // A callback for when profile is successfully updated
+    onProfileUpdated: () -> Unit
 ) {
-    val profileState by viewModel.profileState.collectAsState()
-    var name by remember { mutableStateOf(profileState?.name.orEmpty()) }
-    var birthday by remember { mutableStateOf(profileState?.birthday.orEmpty()) }
-    var city by remember { mutableStateOf(profileState?.city.orEmpty()) }
-    var vk by remember { mutableStateOf(profileState?.vk.orEmpty()) }
-    var instagram by remember { mutableStateOf(profileState?.instagram.orEmpty()) }
-    var status by remember { mutableStateOf(profileState?.status.orEmpty()) }
+    val state by viewModel.screenState.collectAsState()
+    StateHandler(
+        state = state,
+        loadingContent = { LoadingScreen() },
+        errorContent = {
+            ToastMessage(it.errorMessage)
+            if (it.data != null) {
+                ProfileContent(it.data, viewModel, onProfileUpdated)
+            }
+        },
+        content = {
+            if (it.data != null) {
+                ProfileContent(it.data, viewModel, onProfileUpdated)
+            }
+        }
+    )
+}
+
+@Composable
+private fun ProfileContent(
+    profileState: UserProfileData,
+    viewModel: ProfileViewModel,
+    onProfileUpdated: () -> Unit
+) {
+    var name by remember { mutableStateOf(profileState.name) }
+    var birthday by remember { mutableStateOf(profileState.birthday.orEmpty()) }
+    var city by remember { mutableStateOf(profileState.city.orEmpty()) }
+    var vk by remember { mutableStateOf(profileState.vk.orEmpty()) }
+    var instagram by remember { mutableStateOf(profileState.instagram.orEmpty()) }
+    var status by remember { mutableStateOf(profileState.status.orEmpty()) }
     var avatarBase64 by remember { mutableStateOf("") }
-    var avatarFileName by remember { mutableStateOf("avatar.png") } // default file name
+    var avatarFileName by remember { mutableStateOf("avatar.png") }
 
     Column(
         modifier = Modifier
@@ -57,41 +87,45 @@ fun EditProfileScreen(
         verticalArrangement = Arrangement.spacedBy(16.dep)
     ) {
         // Avatar upload section
-        AvatarUpload(avatarBase64, onAvatarSelected = { base64, fileName ->
-            avatarBase64 = base64
-            avatarFileName = fileName
-        })
+        AvatarUpload(
+            avatarUrl = profileState.bigAvatar,
+            avatarBase64 = avatarBase64,
+            onAvatarSelected = { base64, fileName ->
+                avatarBase64 = base64
+                avatarFileName = fileName
+            }
+        )
 
         // Editable fields
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
-            label = { Text("Name") }
+            label = { Text(stringResource(R.string.name)) }
         )
         OutlinedTextField(
             value = birthday,
             onValueChange = { birthday = it },
-            label = { Text("Birthday (yyyy-mm-dd)") }
+            label = { Text(stringResource(R.string.birthday_yyyy_mm_dd)) }
         )
         OutlinedTextField(
             value = city,
             onValueChange = { city = it },
-            label = { Text("City") }
+            label = { Text(stringResource(R.string.city)) }
         )
         OutlinedTextField(
             value = vk,
             onValueChange = { vk = it },
-            label = { Text("VK") }
+            label = { Text(stringResource(R.string.vk)) }
         )
         OutlinedTextField(
             value = instagram,
             onValueChange = { instagram = it },
-            label = { Text("Instagram") }
+            label = { Text(stringResource(R.string.instagram)) }
         )
         OutlinedTextField(
             value = status,
             onValueChange = { status = it },
-            label = { Text("About Me") }
+            label = { Text(stringResource(R.string.about_me)) }
         )
 
         // Save button
@@ -106,16 +140,17 @@ fun EditProfileScreen(
                 avatarFileName = avatarFileName,
                 avatarBase64 = avatarBase64,
                 onProfileUpdated = onProfileUpdated,
-                username = profileState?.username.orEmpty()
+                username = profileState.username
             )
         }) {
-            Text("Save Changes")
+            Text(stringResource(R.string.save_changes))
         }
     }
 }
 
 @Composable
 fun AvatarUpload(
+    avatarUrl: String?,
     avatarBase64: String,
     onAvatarSelected: (String, String) -> Unit
 ) {
@@ -141,13 +176,23 @@ fun AvatarUpload(
                 modifier = Modifier
                     .size(120.dep)
                     .clip(CircleShape)
-                    .border(2.dep, Color.Gray, CircleShape)
+                    .border(2.dep, Color.Gray, CircleShape),
+                contentScale = ContentScale.Crop
             )
-        } else {
-            Text("No Avatar Selected")
+        }
+        else {
+            AsyncImage(
+                model = avatarUrl,
+                contentDescription = "Uploaded Avatar",
+                modifier = Modifier
+                    .size(120.dep)
+                    .clip(CircleShape)
+                    .border(2.dep, Color.Gray, CircleShape),
+                contentScale = ContentScale.Crop
+            )
         }
         Button(onClick = { launcher.launch("image/*") }) {
-            Text("Upload Avatar")
+            Text(stringResource(R.string.upload_avatar))
         }
     }
 }

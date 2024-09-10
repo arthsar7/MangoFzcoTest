@@ -1,3 +1,34 @@
 <resources>
     <string name="app_name">MangoFzcoTest</string>
+    <string name="name">Name</string>
+    <string name="birthday_yyyy_mm_dd">Birthday (yyyy-mm-dd)</string>
+    <string name="city">City</string>
+    <string name="vk">VK</string>
+    <string name="instagram">Instagram</string>
+    <string name="about_me">About Me</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="enter_your_phone_number">Enter your phone number</string>
+    <string name="phone_number">Phone number</string>
+    <string name="send_code">Send code</string>
+    <string name="register">Register</string>
+    <string name="username">Username</string>
+    <string name="upload_avatar">Upload Avatar</string>
+    <string name="phone_example">Phone: </string>
+    <string name="city_example">City: </string>
+    <string name="birthday_example">Birthday: </string>
+    <string name="zodiac_example"> Zodiac: </string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="about_me_example">"About me: "</string>
+    <string name="aquarius">Aquarius</string>
+    <string name="pisces">Pisces</string>
+    <string name="aries">Aries</string>
+    <string name="taurus">Taurus</string>
+    <string name="gemini">Gemini</string>
+    <string name="cancer">Cancer</string>
+    <string name="leo">Leo</string>
+    <string name="virgo">Virgo</string>
+    <string name="libra">Libra</string>
+    <string name="scorpio">Scorpio</string>
+    <string name="sagittarius">Sagittarius</string>
+    <string name="capricorn">Capricorn</string>
 </resources>
