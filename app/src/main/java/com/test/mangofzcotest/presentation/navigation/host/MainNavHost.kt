@@ -1,7 +1,5 @@
 package com.test.mangofzcotest.presentation.navigation.host
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -20,23 +18,13 @@ import com.test.mangofzcotest.presentation.theme.Theme
 @Composable
 fun MainNavHost(
     modifier: Modifier = Modifier,
-    shouldShowBottomBar: Boolean,
     navController: NavHostController = rememberNavController()
 ) {
 
-    val enterTransition = if (shouldShowBottomBar) {
-        EnterTransition.None
-    }
-    else {
-        fadeIn(animationSpec = tween(500))
-    }
+    val enterTransition = fadeIn(animationSpec = tween(500))
 
-    val exitTransition = if (shouldShowBottomBar) {
-        ExitTransition.None
-    }
-    else {
-        fadeOut(animationSpec = tween(500))
-    }
+    val exitTransition = fadeOut(animationSpec = tween(500))
+
 
     NavHost(
         modifier = modifier

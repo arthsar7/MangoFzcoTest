@@ -36,7 +36,6 @@ class MainActivity : ComponentActivity() {
                 ) { paddingValues ->
                     MainNavHost(
                         modifier = Modifier.padding(paddingValues),
-                        shouldShowBottomBar = shouldShowBottomBar,
                         navController = navController
                     )
                 }
