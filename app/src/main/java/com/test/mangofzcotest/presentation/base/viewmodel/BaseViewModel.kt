@@ -11,11 +11,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 abstract class BaseViewModel <T> : ViewModel() {
-
     private val _screenState = MutableStateFlow<ScreenState<T>>(ScreenState.Idle)
     val screenState = _screenState.asStateFlow()
 
-    protected val state get() = _screenState.value
+    protected val currentState get() = _screenState.value
 
     private val Throwable?.errorMessage: String get() = this?.message.ifNullOrBlank { DEFAULT_ERROR_MESSAGE }
 
@@ -29,26 +28,26 @@ abstract class BaseViewModel <T> : ViewModel() {
 
     protected fun emitSuccess(data: T) {
         _screenState.value = ScreenState.Success(data)
-        logState()
+        logStateChange()
     }
 
     protected fun emitError(error: Throwable, data: T? = null) {
-        _screenState.value = ScreenState.Error(error.errorMessage, data ?: state.data)
-        logState()
+        _screenState.value = ScreenState.Error(error.errorMessage, data ?: currentState.data)
+        logStateChange()
     }
 
     protected fun emitError(errorMessage: String, data: T? = null) {
-        _screenState.value = ScreenState.Error(errorMessage, data ?: state.data)
-        logState()
+        _screenState.value = ScreenState.Error(errorMessage, data ?: currentState.data)
+        logStateChange()
     }
 
     protected fun emitLoading(data: T? = null) {
-        _screenState.value = ScreenState.Loading(data ?: state.data)
-        logState()
+        _screenState.value = ScreenState.Loading(data ?: currentState.data)
+        logStateChange()
     }
 
-    private fun logState() {
-        log(state.toString())
+    private fun logStateChange() {
+        log(currentState.toString())
     }
 
     protected fun <T> Result<T>.handleFailure() = onFailure(::emitError)

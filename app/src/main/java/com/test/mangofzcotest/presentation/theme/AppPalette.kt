@@ -1,6 +1,5 @@
 package com.test.mangofzcotest.presentation.theme
 
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 data class AppPalette(
@@ -20,7 +19,6 @@ data class AppPalette(
     val secondaryAqua: Color,
     val onSecondary: Color,
     val onSecondaryAlpha: Color,
-    val logoGradient: Brush,
     val errorColor: Color,
     val disabledTextColor: Color
 )

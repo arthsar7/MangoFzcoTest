@@ -27,7 +27,6 @@ fun NavGraphBuilder.authGraph(navController: NavHostController) {
             AuthCodeInputScreen(
                 onRegister = { phone ->
                     navController.navigateSingleTop(AuthGraph.Register.createRoute(phone)) {
-                        // чтобы при нажатии на кнопку "Назад" вернулась на phone input
                         popUpTo(AuthGraph.PhoneInput.route)
                     }
                 },

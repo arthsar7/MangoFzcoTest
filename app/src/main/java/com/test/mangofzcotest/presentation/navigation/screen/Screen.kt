@@ -1,28 +1,11 @@
 package com.test.mangofzcotest.presentation.navigation.screen
 
-import androidx.annotation.StringRes
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.test.mangofzcotest.R
 import com.test.mangofzcotest.presentation.navigation.screen.Screen.AuthGraph.CodeInput.homeBottomItems
 import com.test.mangofzcotest.presentation.navigation.screen.Screen.AuthGraph.CodeInput.homeGraphChildren
 
-private val profileBottomItem = BottomItem(
-    icon = Icons.Filled.Person,
-    titleRes = R.string.profile,
-    route = "profile"
-)
-
-private val chatsBottomItem = BottomItem(
-    icon = Icons.AutoMirrored.Filled.Send,
-    titleRes = R.string.chats,
-    route = "chats"
-)
 
 sealed class Graph(val route: String, val bottomItems: List<BottomItem> = listOf())
 
@@ -30,7 +13,7 @@ sealed class Screen(
     val route: String,
     val bottomItem: BottomItem? = null
 ) {
-    protected val homeBottomItems = listOf(profileBottomItem, chatsBottomItem)
+    protected val homeBottomItems = listOf(BottomItem.Profile, BottomItem.Chats)
 
     protected val homeGraphChildren = listOf(
         HomeGraph.Chats,
@@ -68,9 +51,24 @@ sealed class Screen(
 
     data object HomeGraph : Graph("home_graph", homeBottomItems) {
 
-        data object Chats : Screen("chats", chatsBottomItem)
-        data object Profile : Screen("profile", profileBottomItem)
-        data object EditProfile : Screen("edit_profile", profileBottomItem)
+        private const val ARG_CHAT_ID = "chat_id"
+
+        data object Chats : Screen("chats", BottomItem.Chats)
+        data object Profile : Screen("profile", BottomItem.Profile)
+        data object EditProfile : Screen("edit_profile", BottomItem.Profile)
+        data object CurrentChat : Screen("current_chat/{${ARG_CHAT_ID}}") {
+
+            fun createRoute(chatId: Int) = "current_chat/$chatId"
+
+            val args = listOf(
+                navArgument(ARG_CHAT_ID) { type = NavType.IntType }
+            )
+
+            fun getChatId(savedStateHandle: SavedStateHandle): Int {
+                return checkNotNull(savedStateHandle[ARG_CHAT_ID])
+            }
+
+        }
 
         fun getScreen(currentRoute: String?): Screen? {
             return homeGraphChildren.firstOrNull { it.route == currentRoute }
@@ -83,9 +81,3 @@ sealed class Screen(
         }
     }
 }
-
-data class BottomItem(
-    val icon: ImageVector,
-    @StringRes val titleRes: Int,
-    val route: String
-)

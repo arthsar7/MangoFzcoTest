@@ -16,9 +16,9 @@ object Theme {
         @Composable
         get() = LocalAppTextFieldColors.current
 
-    val screenSize: ScreenSize
+    val iconButtonColors: AppIconButtonColors
         @Composable
-        get() = LocalScreenSize.current
+        get() = LocalAppIconButtonColors.current
 
     val colors: AppPalette
         @Composable
@@ -69,6 +69,7 @@ fun AppTheme(
         LocalScreenSize provides screenSize,
         LocalAppTextFieldColors provides AppThemeImpl.appTextFieldColors,
         LocalAppShapes provides AppThemeImpl.appShapes,
+        LocalAppIconButtonColors provides AppThemeImpl.appIconButtonColors,
         content = content
     )
 }
@@ -95,4 +96,8 @@ private val LocalAppTextFieldColors = staticCompositionLocalOf<AppTextFieldColor
 
 private val LocalAppShapes = staticCompositionLocalOf<AppShapes> {
     error("No AppShapes provided")
+}
+
+private val LocalAppIconButtonColors = staticCompositionLocalOf<AppIconButtonColors> {
+    error("No AppIconButtonColors provided")
 }

@@ -6,7 +6,6 @@ import com.test.mangofzcotest.domain.entities.UserUpdateData
 import com.test.mangofzcotest.domain.usecases.user.GetUserProfileDataUseCase
 import com.test.mangofzcotest.domain.usecases.user.UpdateUserProfileUseCase
 import com.test.mangofzcotest.presentation.base.viewmodel.BaseViewModel
-import com.text.mangofzcotest.core.utils.log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,7 +18,6 @@ class ProfileViewModel @Inject constructor(
 
     init {
         loadUserProfile()
-        log("ProfileViewModel init")
     }
 
     private fun loadUserProfile() {
@@ -43,7 +41,7 @@ class ProfileViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
 
-            val currentData = state.data
+            val currentData = currentState.data
 
             val newData = currentData?.copy(
                 name = name,

@@ -3,6 +3,7 @@ package com.test.mangofzcotest.presentation.navigation.home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -29,7 +30,14 @@ fun BottomNavigationBar(navController: NavHostController) {
                             saveState = true
                         }
                     }
-                }
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = Theme.colors.secondary,
+                    unselectedIconColor = Theme.colors.onBackground,
+                    selectedTextColor = Theme.colors.secondary,
+                    unselectedTextColor = Theme.colors.onBackground,
+                    indicatorColor = Theme.colors.background
+                )
             )
         }
     }

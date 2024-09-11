@@ -1,19 +1,12 @@
 package com.test.mangofzcotest.presentation.navigation.home.profile.edit
 
-import android.app.DatePickerDialog
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.provider.MediaStore
-import android.util.Base64
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -44,15 +37,10 @@ import com.test.mangofzcotest.presentation.base.ui.StateHandler
 import com.test.mangofzcotest.presentation.base.ui.ToastMessage
 import com.test.mangofzcotest.presentation.navigation.home.profile.ProfileViewModel
 import com.test.mangofzcotest.presentation.theme.dep
-import java.io.ByteArrayOutputStream
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 
 @Composable
 fun EditProfileScreen(
     viewModel: ProfileViewModel,
-    paddingValues: PaddingValues,
     onProfileUpdated: () -> Unit
 ) {
     val state by viewModel.screenState.collectAsState()
@@ -65,14 +53,13 @@ fun EditProfileScreen(
             ToastMessage(error)
         },
         content = { userProfileData ->
-            ProfileContent(paddingValues, userProfileData, viewModel, onProfileUpdated)
+            ProfileContent(userProfileData, viewModel, onProfileUpdated)
         }
     )
 }
 
 @Composable
 private fun ProfileContent(
-    paddingValues: PaddingValues,
     profileState: UserProfileData,
     viewModel: ProfileViewModel,
     onProfileUpdated: () -> Unit
@@ -91,12 +78,10 @@ private fun ProfileContent(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dep)
-            .padding(paddingValues)
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(16.dep),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Avatar upload section
         AvatarUpload(
             avatarUrl = profileState.bigAvatar,
             avatarBase64 = avatarBase64,
@@ -106,14 +91,12 @@ private fun ProfileContent(
             }
         )
 
-        // Editable fields
         BlueTextField(
             value = name,
             onValueChange = { name = it },
             placeholderText = stringResource(R.string.name),
         )
 
-        // Birthday field with DatePicker
         BlueTextField(
             value = birthday,
             onValueChange = {},
@@ -221,41 +204,5 @@ fun AvatarUpload(
                 error = painterResource(id = R.drawable.image_placeholder)
             )
         }
-        BlueTextButton(
-            onClick = { launcher.launch("image/*") },
-            text = stringResource(id = R.string.upload_avatar)
-        )
     }
-}
-
-// Functions to encode image to base64
-fun Context.encodeImageToBase64(uri: Uri): String {
-    val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
-    val outputStream = ByteArrayOutputStream()
-    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-    val byteArray = outputStream.toByteArray()
-    return Base64.encodeToString(byteArray, Base64.DEFAULT)
-}
-
-// Decode base64 string to bitmap for preview
-fun decodeBase64ToBitmap(base64Str: String): Bitmap {
-    val decodedBytes = Base64.decode(base64Str, Base64.DEFAULT)
-    return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
-}
-
-// Function to show DatePickerDialog
-fun showDatePickerDialog(context: Context, onDateSelected: (String) -> Unit) {
-    val calendar = Calendar.getInstance()
-    val datePickerDialog = DatePickerDialog(
-        context,
-        { _, year, month, dayOfMonth ->
-            val formattedDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                .format(calendar.apply { set(year, month, dayOfMonth) }.time)
-            onDateSelected(formattedDate)
-        },
-        calendar.get(Calendar.YEAR),
-        calendar.get(Calendar.MONTH),
-        calendar.get(Calendar.DAY_OF_MONTH)
-    )
-    datePickerDialog.show()
 }

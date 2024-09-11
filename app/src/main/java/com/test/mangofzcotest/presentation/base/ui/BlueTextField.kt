@@ -55,7 +55,9 @@ fun BlueTextField(
             placeholder?.invoke() ?: placeholderText?.let {
                 Text(
                     text = it,
-                    style = Theme.typography.textInput
+                    style = Theme.typography.textInput.copy(
+                        color = Theme.textFieldColors.baseColors.unfocusedPlaceholderColor
+                    )
                 )
             }
         },

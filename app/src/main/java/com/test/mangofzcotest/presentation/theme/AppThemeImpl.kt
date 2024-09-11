@@ -3,9 +3,9 @@ package com.test.mangofzcotest.presentation.theme
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults.buttonColors
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -17,6 +17,14 @@ import ru.rassvet.ui.theme.ScreenSize
 
 object AppThemeImpl {
 
+    val appIconButtonColors: AppIconButtonColors
+        @Composable
+        get()  = AppIconButtonColors(
+        baseColors = IconButtonDefaults.iconButtonColors(
+            containerColor = appPalette.primary,
+            contentColor = appPalette.onPrimary
+        )
+    )
     val appShapes = AppShapes(
         smallRoundedShapes = RoundedCornerShape(10),
         mediumRoundedShapes = RoundedCornerShape(30),
@@ -42,16 +50,7 @@ object AppThemeImpl {
         onSecondaryAlpha = White.copy(alpha = 0.4f),
         buttonOrangeNoActive = Orange.copy(alpha = 0.05f),
         errorColor = Red,
-        disabledTextColor = Gray,
-        logoGradient = Brush.verticalGradient(
-            listOf(
-                LogoGradient1,
-                LogoGradient1,
-                LogoGradient2,
-                LogoGradient3,
-                LogoGradient4
-            )
-        )
+        disabledTextColor = Gray
     )
 
     val appTextFieldColors: AppTextFieldColors
@@ -126,6 +125,12 @@ object AppThemeImpl {
                 lineHeight = 16.lh(130),
                 color = appPalette.onBackground
             ),
+            bodySmall = appTextStyle.copy(
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Normal,
+                lineHeight = 14.lh(130),
+                color = appPalette.onBackground
+            ),
             textButton = appTextStyle.copy(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
@@ -150,6 +155,10 @@ object AppThemeImpl {
                 fontSize = 14.sp,
                 lineHeight = 14.lh(130),
             ),
+            bodySmall = defaultTypography.bodySmall.copy(
+                fontSize = 10.sp,
+                lineHeight = 12.lh(130),
+            ),
             textButton = defaultTypography.textButton.copy(
                 fontSize = 12.sp,
                 lineHeight = 12.lh(130),
@@ -169,6 +178,10 @@ object AppThemeImpl {
             bodyRegular = defaultTypography.bodyRegular.copy(
                 fontSize = 18.sp,
                 lineHeight = 18.lh(130)
+            ),
+            bodySmall = defaultTypography.bodySmall.copy(
+                fontSize = 14.sp,
+                lineHeight = 16.lh(130)
             ),
             textButton = defaultTypography.textButton.copy(
                 fontSize = 16.sp,

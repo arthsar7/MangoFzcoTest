@@ -2,11 +2,6 @@ package com.test.mangofzcotest.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
-val LogoGradient1 = Color(0xFFF7EDE0)
-val LogoGradient2 = Color(0xFFF7EDE0)
-val LogoGradient3 = Color(0xFFF7EDE0)
-val LogoGradient4 = Color(0xFFF7EDE0)
-
 val Blue = Color(0xFF212933)
 val BlueLight = Color(0xFF99A8BA)
 val BlueAqua = Color(0xFFCCD3DC)
