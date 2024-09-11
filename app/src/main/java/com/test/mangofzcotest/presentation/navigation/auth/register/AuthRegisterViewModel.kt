@@ -3,9 +3,8 @@ package com.test.mangofzcotest.presentation.navigation.auth.register
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.test.mangofzcotest.domain.usecases.auth.RegisterUseCase
-import com.test.mangofzcotest.presentation.BaseViewModel
+import com.test.mangofzcotest.presentation.base.viewmodel.BaseViewModel
 import com.test.mangofzcotest.presentation.navigation.screen.Screen
-import com.test.mangofzcotest.presentation.navigation.screen.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,9 +19,9 @@ class AuthRegisterViewModel @Inject constructor(
 
     fun register(phone: String, name: String, username: String) {
         viewModelScope.launch {
-            _screenState.value = ScreenState.Loading()
+            emitLoading()
             registerUseCase(phone, name, username).onSuccess {
-                _screenState.value = ScreenState.Success(phone)
+                emitSuccess(phone)
             }.handleFailure()
         }
     }

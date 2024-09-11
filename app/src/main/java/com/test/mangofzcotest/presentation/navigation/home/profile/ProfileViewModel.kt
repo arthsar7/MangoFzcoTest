@@ -1,12 +1,11 @@
-package com.test.mangofzcotest.presentation.navigation.profile
+package com.test.mangofzcotest.presentation.navigation.home.profile
 
 import androidx.lifecycle.viewModelScope
 import com.test.mangofzcotest.domain.entities.UserProfileData
 import com.test.mangofzcotest.domain.entities.UserUpdateData
 import com.test.mangofzcotest.domain.usecases.user.GetUserProfileDataUseCase
 import com.test.mangofzcotest.domain.usecases.user.UpdateUserProfileUseCase
-import com.test.mangofzcotest.presentation.BaseViewModel
-import com.test.mangofzcotest.presentation.navigation.screen.ScreenState
+import com.test.mangofzcotest.presentation.base.viewmodel.BaseViewModel
 import com.text.mangofzcotest.core.utils.log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -20,14 +19,13 @@ class ProfileViewModel @Inject constructor(
 
     init {
         loadUserProfile()
+        log("ProfileViewModel init")
     }
 
     private fun loadUserProfile() {
         viewModelScope.launch {
-            _screenState.value = ScreenState.Loading()
-            getUserProfileDataUseCase().onSuccess { profileData ->
-               _screenState.value = ScreenState.Success(profileData)
-            }.handleFailure()
+            emitLoading()
+            getUserProfileDataUseCase().onSuccess(::emitSuccess).handleFailure()
         }
     }
 
@@ -44,7 +42,22 @@ class ProfileViewModel @Inject constructor(
         onProfileUpdated: () -> Unit
     ) {
         viewModelScope.launch {
-            _screenState.value = ScreenState.Loading()
+
+            val currentData = state.data
+
+            val newData = currentData?.copy(
+                name = name,
+                username = username,
+                birthday = birthday,
+                city = city,
+                vk = vk,
+                status = status,
+                instagram = instagram,
+                avatarBase64 = avatarBase64,
+            )
+
+            emitLoading(newData)
+
             val updatedProfile = UserUpdateData(
                 name = name,
                 username = username,
@@ -59,10 +72,9 @@ class ProfileViewModel @Inject constructor(
 
             val result = updateUserProfileUseCase(updatedProfile)
 
-            result.onSuccess { userProfileData ->
-                log(userProfileData.toString())
+            result.onSuccess {
+                emitSuccess(it)
                 onProfileUpdated()
-                _screenState.value = ScreenState.Success(userProfileData)
             }.handleFailure()
         }
     }

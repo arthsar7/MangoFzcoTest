@@ -12,6 +12,10 @@ import ru.rassvet.ui.theme.ScreenSize
 
 object Theme {
 
+    val textFieldColors: AppTextFieldColors
+        @Composable
+        get() = LocalAppTextFieldColors.current
+
     val screenSize: ScreenSize
         @Composable
         get() = LocalScreenSize.current
@@ -27,6 +31,10 @@ object Theme {
     val typography: AppTypography
         @Composable
         get() = LocalAppTypography.current
+
+    val shapes: AppShapes
+        @Composable
+        get() = LocalAppShapes.current
 }
 
 @Composable
@@ -59,6 +67,8 @@ fun AppTheme(
         LocalAppButtonColors provides AppThemeImpl.appButtonColors,
         LocalAppTypography provides appTypography,
         LocalScreenSize provides screenSize,
+        LocalAppTextFieldColors provides AppThemeImpl.appTextFieldColors,
+        LocalAppShapes provides AppThemeImpl.appShapes,
         content = content
     )
 }
@@ -77,4 +87,12 @@ private val LocalAppTypography = staticCompositionLocalOf<AppTypography> {
 
 private val LocalScreenSize = staticCompositionLocalOf<ScreenSize> {
     error("No ScreenSize provided")
+}
+
+private val LocalAppTextFieldColors = staticCompositionLocalOf<AppTextFieldColors> {
+    error("No AppTextFieldColors provided")
+}
+
+private val LocalAppShapes = staticCompositionLocalOf<AppShapes> {
+    error("No AppShapes provided")
 }

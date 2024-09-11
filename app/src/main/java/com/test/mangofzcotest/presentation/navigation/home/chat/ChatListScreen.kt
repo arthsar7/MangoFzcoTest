@@ -1,4 +1,4 @@
-package com.test.mangofzcotest.presentation.navigation.chat
+package com.test.mangofzcotest.presentation.navigation.home.chat
 
 import androidx.compose.runtime.Composable
 

@@ -8,10 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -25,8 +22,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.test.mangofzcotest.R
-import com.test.mangofzcotest.presentation.StateHandler
-import com.test.mangofzcotest.presentation.ToastMessage
+import com.test.mangofzcotest.presentation.base.state.isLoading
+import com.test.mangofzcotest.presentation.base.ui.BlueTextButton
+import com.test.mangofzcotest.presentation.base.ui.BlueTextField
+import com.test.mangofzcotest.presentation.base.ui.PrimaryCircularProgressIndicator
+import com.test.mangofzcotest.presentation.base.ui.StateHandler
+import com.test.mangofzcotest.presentation.base.ui.ToastMessage
 import com.test.mangofzcotest.presentation.theme.Theme
 import com.test.mangofzcotest.presentation.theme.dep
 
@@ -36,63 +37,73 @@ fun AuthRegisterScreen(
     onSuccess: (phone: String) -> Unit
 ) {
     val currentState by viewModel.screenState.collectAsState()
-    Column {
-        RegisterScreen(
-            phone = viewModel.phone,
-            onRegister = viewModel::register
-        )
-        StateHandler(
-            state = currentState,
-            loadingContent = {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
-            },
-            errorContent = {
-                ToastMessage(it.errorMessage)
-            },
-            content = {
-                val data = it.data
-                LaunchedEffect(data) {
-                    if (data != null) {
-                        onSuccess(data)
-                    }
-                }
-            }
-        )
-    }
-}
-
-@Composable
-fun RegisterScreen(
-    phone: String,
-    onRegister: (phone: String, name: String, username: String) -> Unit,
-) {
-    var name by remember { mutableStateOf("") }
-    var username by remember { mutableStateOf("") }
-    val usernameRegex = "^[a-zA-Z0-9_-]*$".toRegex()
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dep),
+        horizontalAlignment = Alignment.CenterHorizontally
+    )  {
+        RegisterScreen(
+            modifier = Modifier
+                .weight(4f),
+            isLoading = currentState.isLoading,
+            phone = viewModel.phone,
+            onRegister = viewModel::register,
+        )
+        Column(modifier = Modifier.weight(1f)) {
+            StateHandler(
+                state = currentState,
+                loadingContent = {
+                    PrimaryCircularProgressIndicator()
+                },
+                errorContent = { error ->
+                    ToastMessage(error)
+                },
+                content = { data ->
+                    LaunchedEffect(data) {
+                        onSuccess(data)
+                    }
+                }
+            )
+        }
+    }
+}
+
+typealias OnRegisterCallback = (phone: String, name: String, username: String) -> Unit
+
+@Composable
+fun RegisterScreen(
+    modifier: Modifier,
+    isLoading: Boolean,
+    phone: String,
+    onRegister: OnRegisterCallback,
+) {
+    var name by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dep),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = stringResource(R.string.register), style = Theme.typography.titleAuthScreen)
+        Text(
+            text = stringResource(R.string.register),
+            style = Theme.typography.titleLarge
+        )
 
-        // Номер телефона без возможности редактирования
-        Text(text = phone, style = Theme.typography.regularAuthScreen)
+        Text(text = phone, style = Theme.typography.bodyRegular)
 
         Spacer(modifier = Modifier.height(16.dep))
 
-        TextField(
+        BlueTextField(
             value = name,
-            onValueChange =  {
+            onValueChange = {
                 name = it
             },
-            placeholder = { Text(stringResource(R.string.name)) },
+            placeholderText = stringResource(id = R.string.name),
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 autoCorrectEnabled = false
@@ -101,12 +112,12 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(16.dep))
 
-        TextField(
+        BlueTextField(
             value = username,
             onValueChange = {
-                username = it
+                username = UsernameRequirements.validateInput(it)
             },
-            placeholder = { Text(stringResource(R.string.username)) },
+            placeholderText = stringResource(R.string.username),
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -117,16 +128,13 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(16.dep))
 
-        Button(
+        BlueTextButton(
             onClick = {
-                if (usernameRegex.matches(username) && name.isNotEmpty() && username.isNotEmpty()) {
-                    onRegister(phone, name, username)
-                }
+                onRegister(phone, name, username)
             },
-            enabled = name.isNotEmpty() && username.isNotEmpty(),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(stringResource(R.string.register))
-        }
+            enabled = !isLoading && name.isNotEmpty() && UsernameRequirements.isValid(username),
+            modifier = Modifier.fillMaxWidth(),
+            text = stringResource(R.string.register)
+        )
     }
 }

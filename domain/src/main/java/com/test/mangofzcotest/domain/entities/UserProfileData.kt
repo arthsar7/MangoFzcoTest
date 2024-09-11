@@ -16,5 +16,6 @@ data class UserProfileData(
     val phone: String,
     val completedTask: Int,
     val bigAvatar: String?,
-    val miniAvatar: String?
+    val miniAvatar: String?,
+    val avatarBase64: String? = null
 )

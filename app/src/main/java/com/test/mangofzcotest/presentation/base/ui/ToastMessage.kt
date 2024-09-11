@@ -1,4 +1,4 @@
-package com.test.mangofzcotest.presentation
+package com.test.mangofzcotest.presentation.base.ui
 
 import android.content.Context
 import android.widget.Toast

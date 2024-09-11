@@ -10,5 +10,5 @@ data class UserUpdateData(
     val avatarFileName: String?,
     val avatarBase64: String?,
     val vk: String?,
-    val instagram: String?
+    val instagram: String?,
 )

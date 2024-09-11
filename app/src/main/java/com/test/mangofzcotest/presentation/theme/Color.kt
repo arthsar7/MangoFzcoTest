@@ -15,8 +15,9 @@ val Orange = Color(0xFFFF5100)
 val White = Color.White
 
 val AccentBlue = Color(0xFF4643D3)
-val AccentPeach = Color(0xFFFC805C)
-val Red = Color.Red
+val AccentLightBlue = Color(0xFF5CB7FC)
+
+val Red = Color(0xFFD32F2F)
 val BgBlue = Color(0xFFE5F2F6)
 
 val Gray = Color(0xFFA2A3A3)

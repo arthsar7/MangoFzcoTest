@@ -13,10 +13,10 @@
     <string name="register">Register</string>
     <string name="username">Username</string>
     <string name="upload_avatar">Upload Avatar</string>
-    <string name="phone_example">Phone: </string>
-    <string name="city_example">City: </string>
-    <string name="birthday_example">Birthday: </string>
-    <string name="zodiac_example"> Zodiac: </string>
+    <string name="phone_example">"Phone: "</string>
+    <string name="city_example">"City: "</string>
+    <string name="birthday_example">"Birthday: "</string>
+    <string name="zodiac_example">" Zodiac: "</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="about_me_example">"About me: "</string>
     <string name="aquarius">Aquarius</string>
@@ -31,4 +31,12 @@
     <string name="scorpio">Scorpio</string>
     <string name="sagittarius">Sagittarius</string>
     <string name="capricorn">Capricorn</string>
+    <string name="sms_code">SMS code</string>
+    <string name="enter_sms_code">Enter SMS code</string>
+    <string name="loading">Loading…</string>
+    <string name="enter_a_valid_phone_number">Enter a valid phone number</string>
+    <string name="please_wait">Please wait</string>
+    <string name="information_not_provided">Information not provided</string>
+    <string name="chats">Chats</string>
+    <string name="profile">Profile</string>
 </resources>

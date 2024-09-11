@@ -1,4 +1,4 @@
-package com.test.mangofzcotest.presentation.navigation.graph
+package com.test.mangofzcotest.presentation.navigation.auth
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -7,8 +7,8 @@ import androidx.navigation.compose.navigation
 import com.test.mangofzcotest.presentation.navigation.auth.codeinput.AuthCodeInputScreen
 import com.test.mangofzcotest.presentation.navigation.auth.phoneinput.AuthPhoneInputScreen
 import com.test.mangofzcotest.presentation.navigation.auth.register.AuthRegisterScreen
-import com.test.mangofzcotest.presentation.navigation.screen.Screen.HomeGraph
 import com.test.mangofzcotest.presentation.navigation.screen.Screen.AuthGraph
+import com.test.mangofzcotest.presentation.navigation.screen.Screen.HomeGraph
 import com.text.mangofzcotest.core.utils.navigatePopUpGraph
 import com.text.mangofzcotest.core.utils.navigateSingleTop
 
