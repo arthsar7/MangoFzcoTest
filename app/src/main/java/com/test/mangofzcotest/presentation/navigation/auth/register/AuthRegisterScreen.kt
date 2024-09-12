@@ -18,6 +18,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -81,6 +83,9 @@ fun RegisterScreen(
     var name by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
 
+    val keyboard = LocalSoftwareKeyboardController.current
+
+    val focusRequester = LocalFocusManager.current
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -100,7 +105,7 @@ fun RegisterScreen(
         BlueTextField(
             value = name,
             onValueChange = {
-                name = it
+                if (!isLoading) name = it
             },
             placeholderText = stringResource(id = R.string.name),
             modifier = Modifier.fillMaxWidth(),
@@ -115,7 +120,9 @@ fun RegisterScreen(
         BlueTextField(
             value = username,
             onValueChange = {
-                username = UsernameRequirements.validateInput(it)
+                if (!isLoading) {
+                    username = UsernameRequirements.validateInput(it)
+                }
             },
             placeholderText = stringResource(R.string.username),
             modifier = Modifier.fillMaxWidth(),
@@ -131,6 +138,8 @@ fun RegisterScreen(
         BlueTextButton(
             onClick = {
                 onRegister(phone, name, username)
+                keyboard?.hide()
+                focusRequester.clearFocus()
             },
             enabled = !isLoading && name.isNotEmpty() && UsernameRequirements.isValid(username),
             modifier = Modifier.fillMaxWidth(),
