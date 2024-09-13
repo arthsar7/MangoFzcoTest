@@ -72,4 +72,4 @@ This project is a test Android mobile application developed as part of a technic
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/MangoFzcoTest.git
+   git clone https://github.com/arthsar7/MangoFzcoTest.git
